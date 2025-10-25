@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+/* Tema madeira base e utilitários */
+:root {
+  --color-pinus: #D9CBA7;
+  --color-angelim: #A57A56;
+  --color-imbuia: #5B3A29;
+  --color-offwhite: #F6F3EE;
+  --color-graphite: #2F2F2F;
+}
+
+body {
+  background-color: var(--color-offwhite);
+  color: var(--color-graphite);
+}
+
+/* Evitar @apply por enquanto (Tailwind v4 instável) */
+/* Definições diretas para garantir carregamento de estilos */
+.container {
+  max-width: 64rem; /* ~max-w-5xl */
+  margin-inline: auto; /* mx-auto */
+  padding-inline: 1rem; /* px-4 */
+}
+
+.card {
+  background-color: #ffffff; /* bg-white */
+  border-radius: 12px; /* rounded-lg */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08); /* shadow-card */
+  padding: 1.5rem; /* p-6 */
+}
+
+.btn-primary {
+  background-color: var(--color-angelim);
+  color: #ffffff;
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  border-radius: 0.5rem; /* rounded */
+  transition: background-color 150ms ease-in-out; /* transition */
+}
+
+.btn-primary:hover {
+  background-color: var(--color-imbuia);
+}
+
+/* Botão de ação perigosa (excluir) */
+.btn-danger {
+  background-color: #dc2626; /* red-600 */
+  color: #ffffff;
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  border-radius: 0.5rem; /* rounded */
+  transition: background-color 150ms ease-in-out; /* transition */
+}
+
+.btn-danger:hover {
+  background-color: #b91c1c; /* red-700 */
+}
+
+/* Links como botões */
+a {
+  display: inline-block;
+  background-color: var(--color-angelim);
+  color: #ffffff;
+  padding: 0.5rem 1rem; /* px-4 py-2 */
+  border-radius: 0.5rem; /* rounded */
+  text-decoration: none; /* remover sublinhado */
+  transition: background-color 150ms ease-in-out; /* transition */
+}
+
+a:hover {
+  background-color: var(--color-imbuia);
+}
