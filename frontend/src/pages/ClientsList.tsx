@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { type Client, deleteClient, getClients } from "../api";
 import { Link } from "react-router-dom";

@@ -41,6 +41,10 @@ Escolha uma forma:
   sudo apt install -y unzip
   unzip TesteTS_Backend.zip -d ~
   ```
+Crie as pastas caso não existam (alguns pacotes não trazem a estrutura completa):
+```bash
+mkdir -p ~/TesteTS_Backend/backend ~/TesteTS_Backend/frontend
+```
 Verifique a estrutura:
 ```
 ~/TesteTS_Backend/backend
@@ -61,20 +65,39 @@ Verifique a estrutura:
    ```env
    PORT=3000
    JWT_SECRET="troque-por-um-segredo-forte"
+   # SQLite (Prisma) — aponta para backend/prisma/dev.db
+   DATABASE_URL="file:./dev.db"
    ```
    Dica (gerar segredo forte):
    ```bash
    openssl rand -hex 32
    ```
+   Observação:
+   - O `DATABASE_URL` é obrigatório para o Prisma. Com SQLite, use `file:./dev.db`, relativo ao arquivo `schema.prisma` (fica em `backend/prisma/`).
+   - Para Postgres (se futuramente trocar o provider), use algo como:
+     ```env
+     DATABASE_URL="postgresql://usuario:senha@localhost:5432/nome_db?schema=public"
+     ```
 3. (Opcional/Conforme o projeto) Aplique migrações/seed do Prisma:
+   **IMPORTANTE: Execute os comandos Prisma dentro do diretório `backend`**
    ```bash
+   # Certifique-se de estar em ~/TesteTS_Backend/backend
+   cd ~/TesteTS_Backend/backend
+   
+   # Se houver migrações criadas:
    npx prisma migrate deploy
-   npx prisma db seed   # se o projeto tiver seed configurado
+   
+   # OU se não houver migrações, sincronize o schema:
+   npx prisma db push
+   
+   # Opcional: popular dados de exemplo (se configurado)
+   npx prisma db seed
    ```
 4. Compile o TypeScript:
    ```bash
    npm run build
    ```
+   Observação (Frontend): Se aparecerem erros TS6133 (imports não usados), remova o `import React from "react"` e imports não utilizados. O projeto já usa JSX automático (`jsx: "react-jsx"` em `tsconfig.app.json`), então o import padrão de React não é necessário.
 5. Execute em produção (manual):
    ```bash
    npm start
@@ -91,7 +114,7 @@ Verifique a estrutura:
      ```bash
      curl http://192.168.100.117:3000/
      ```
-
+PAREI AQUI...........
 ### Backend como serviço (systemd) — opcional
 1. Crie o unit file:
    ```bash

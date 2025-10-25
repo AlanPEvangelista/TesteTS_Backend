@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import Layout from "../components/Layout";
 
 export default function ContactPage() {
@@ -8,14 +8,14 @@ export default function ContactPage() {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  function onFileChange(e: React.ChangeEvent<HTMLInputElement>, which: 1 | 2) {
+  function onFileChange(e: ChangeEvent<HTMLInputElement>, which: 1 | 2) {
     const file = e.target.files?.[0] || null;
     const url = file ? URL.createObjectURL(file) : null;
     if (which === 1) setPreview1(url);
     else setPreview2(url);
   }
 
-  async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setLoading(true);
     setMessage(null);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import ClientForm, { type ClientInput } from "../components/ClientForm";
 import { getClient, updateClient } from "../api";
