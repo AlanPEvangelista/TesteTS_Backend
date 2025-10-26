@@ -3,10 +3,12 @@ import ClientForm, { type ClientInput, type ClientFormFiles } from "../component
 import { createClientWithFiles } from "../api";
 import { useNavigate } from "react-router-dom";
 import { Protected } from "../context/AuthContext";
+import { useState } from "react";
 
 /** Página de criação de cliente */
 export default function ClientNewPage() {
   const navigate = useNavigate();
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   async function handleSubmit(data: ClientInput, files?: ClientFormFiles) {
     const form = new FormData();
@@ -19,8 +21,13 @@ export default function ClientNewPage() {
     if (files?.project2) form.append("project2", files.project2);
     if (files?.project3) form.append("project3", files.project3);
 
-    await createClientWithFiles(form);
-    navigate("/clients");
+    setErrorMsg(null);
+    try {
+      await createClientWithFiles(form);
+      navigate("/clients");
+    } catch (err: any) {
+      setErrorMsg(err?.message || "Falha ao salvar cliente");
+    }
   }
 
   return (
@@ -28,6 +35,7 @@ export default function ClientNewPage() {
       <Layout>
         <div className="card max-w-xl mx-auto">
           <h2 className="text-2xl font-semibold mb-4">Novo Cliente</h2>
+          {errorMsg && <p className="text-red-600 mb-3">{errorMsg}</p>}
           <ClientForm onSubmit={handleSubmit} />
         </div>
       </Layout>
