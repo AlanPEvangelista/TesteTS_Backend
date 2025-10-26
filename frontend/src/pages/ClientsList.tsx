@@ -58,7 +58,7 @@ export default function ClientsListPage() {
                 <h3 className="text-lg font-medium">{c.name}</h3>
                 <p className="text-sm text-graphite">{c.phone} {c.email ? `• ${c.email}` : ""}</p>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 <Link to={`/clients/${c.id}`} className="underline">Detalhes</Link>
                 <Link to={`/clients/${c.id}/edit`} className="underline">Editar</Link>
                 <button onClick={() => onDelete(c.id)} className="btn-danger">Excluir cliente</button>

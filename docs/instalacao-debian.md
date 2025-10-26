@@ -4,7 +4,7 @@ Este guia explica, passo a passo, como instalar e executar o projeto (backend No
 
 ## 1) Visão geral e requisitos
 - Backend: Node.js + Express (TypeScript), porta padrão `3000`.
-- Frontend: Vite/React (build estático). Preview padrão `4173`. Opcional: Nginx em `80/443`.
+- Frontend: Vite/React (build estático). Preview padrão `4173`. Opcional: Nginx em `87/443`.
 - Uploads: `backend/uploads`.
 - Banco: Prisma (há `prisma/dev.db`, geralmente SQLite).
 
@@ -34,7 +34,7 @@ Escolha uma forma:
 - Clonar de um repositório Git:
   ```bash
   cd ~
-  git clone <URL_DO_REPOSITORIO> TesteTS_Backend
+  git clone https://github.com/AlanPEvangelista/TesteTS_Backend TesteTS_Backend
   ```
 - Transferir um `.zip` do Windows para o Debian (SCP/SFTP/Pendrive) e descompactar:
   ```bash
@@ -191,7 +191,7 @@ PAREI AQUI...........
    Conteúdo básico (SPA):
    ```nginx
    server {
-     listen 80;
+     listen 87;
      server_name 192.168.100.117;
      root /var/www/testets-frontend;
      index index.html;
@@ -206,10 +206,10 @@ PAREI AQUI...........
    sudo ln -s /etc/nginx/sites-available/testets-frontend /etc/nginx/sites-enabled/testets-frontend
    sudo nginx -t
    sudo systemctl reload nginx
-   sudo ufw allow 80/tcp
+   sudo ufw allow 87/tcp
    ```
 5. Acesse:
-   - `http://192.168.100.117/`
+   - `http://192.168.100.117:87/`
 
 ### Proxy para o backend (opcional)
 Se preferir expor a API atrás do Nginx, mantenha o backend rodando (porta 3000) e adicione um bloco de proxy. Exemplo simples:
@@ -233,25 +233,42 @@ Ajuste o frontend para apontar para `http://192.168.100.117/api/` se você utili
 - Frontend (Preview):
   - `http://192.168.100.117:4173/`
 - Frontend (Nginx):
-  - `http://192.168.100.117/`
+  - `http://192.168.100.117:87/`
 - Teste login, cadastro de cliente e upload de imagens.
 
 ## 8) Atualizações e manutenção
-- Atualizar o código (git pull, novo zip, etc.).
-- Backend:
+
+### Passos rápidos via GitHub
+- Atualizar a partir do repositório:
+  ```bash
+  cd ~/TesteTS_Backend
+  git fetch --all --prune
+  git branch --show-current
+  git pull --ff-only origin master
+  ```
+- Backend (executar dentro de `backend`):
   ```bash
   cd ~/TesteTS_Backend/backend
   npm install
+  # Prisma (se há migrações):
+  npx prisma migrate deploy
+  # Se não há migrações:
+  # npx prisma db push
   npm run build
-  npm start            # ou reinicie o serviço systemd
+  # Reiniciar serviço (se usa systemd) ou subir manualmente
+  sudo systemctl restart testets-backend || npm start
   ```
+  Notas:
+  - `.env` deve existir em `backend/.env` com `PORT`, `JWT_SECRET`, `DATABASE_URL="file:./dev.db"`.
+  - Comandos Prisma sempre dentro de `backend`.
 - Frontend:
   ```bash
   cd ~/TesteTS_Backend/frontend
   npm install
   npm run build
-  # Se Nginx:
+  # Nginx (se usa)
   sudo cp -r ~/TesteTS_Backend/frontend/dist/* /var/www/testets-frontend/
+  sudo nginx -t
   sudo systemctl reload nginx
   ```
 
@@ -266,7 +283,18 @@ Ajuste o frontend para apontar para `http://192.168.100.117/api/` se você utili
   - Rode `npm install` nas duas pastas.
   - Verifique versão do Node (`>= 18`, ideal `20`).
 - Prisma:
-  - Se migrações falham, cheque `prisma/schema.prisma` e use `npx prisma migrate deploy`.
+  - Execute comandos sempre dentro de `~/TesteTS_Backend/backend`.
+  - Erro P1012 (DATABASE_URL não encontrado):
+    - Crie `backend/.env` com:
+      - `PORT=3000`
+      - `JWT_SECRET="troque-por-um-segredo-forte"`
+      - `DATABASE_URL="file:./dev.db"` (SQLite; relativo a `backend/prisma`)
+    - Alternativa: `prisma/.env` contendo apenas `DATABASE_URL="file:./dev.db"`.
+    - Teste rápido: `DATABASE_URL="file:./dev.db" npx prisma db push`.
+  - Migrações:
+    - Se há migrações no projeto: `npx prisma migrate deploy`.
+    - Se não há migrações: `npx prisma db push`.
+  - Para Postgres: ajuste `provider = "postgresql"` e use uma URL no formato `postgresql://usuario:senha@host:5432/nome_db?schema=public`.
 - Permissões Nginx:
   - Garanta leitura em `/var/www/testets-frontend` por `www-data`:
     ```bash
@@ -277,8 +305,8 @@ Ajuste o frontend para apontar para `http://192.168.100.117/api/` se você utili
 
 ## 10) Checklist final
 - [ ] Backend em execução (porta 3000) e acessível de outro dispositivo.
-- [ ] Frontend servindo (Preview em 4173 ou Nginx em 80) e apontando para a API (`VITE_API_URL`).
-- [ ] Portas liberadas no firewall (`3000`, `4173`, `80/443`).
+- [ ] Frontend servindo (Preview em 4173 ou Nginx em 87) e apontando para a API (`VITE_API_URL`).
+- [ ] Portas liberadas no firewall (`3000`, `4173`, `87/443`).
 - [ ] Uploads e funcionalidades testadas (clientes, contato, imagens).
 
 Pronto! Com esses passos, o site e a API devem estar acessíveis em `192.168.100.117` dentro da sua rede local.

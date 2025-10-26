@@ -1,5 +1,6 @@
 import React from "react";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 
 /**
  * Layout padrão do app com cabeçalho e container.
@@ -24,9 +25,9 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <h1 className="text-2xl md:text-3xl font-bold">Marcenaria Participativa</h1>
             <p className="text-sm md:text-base opacity-90">Sua participação no Projeto é Fundamental para a Conclusão do mesmo.</p>
           </div>
-          <nav className="flex gap-3 items-center">
-            <a className="hover:underline hover:opacity-80" href="/clients">Clientes</a>
-            <a className="hover:underline hover:opacity-80" href="/contato">Contato</a>
+          <nav className="flex flex-wrap gap-2 items-center">
+            <Link className="hover:underline hover:opacity-80" to="/clients">Clientes</Link>
+            <Link className="hover:underline hover:opacity-80" to="/contato">Contato</Link>
             <button className="btn-primary" onClick={logout}>Sair</button>
           </nav>
         </div>

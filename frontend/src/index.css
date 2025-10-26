@@ -54,17 +54,4 @@ body {
   background-color: #b91c1c; /* red-700 */
 }
 
-/* Links como botões */
-a {
-  display: inline-block;
-  background-color: var(--color-angelim);
-  color: #ffffff;
-  padding: 0.5rem 1rem; /* px-4 py-2 */
-  border-radius: 0.5rem; /* rounded */
-  text-decoration: none; /* remover sublinhado */
-  transition: background-color 150ms ease-in-out; /* transition */
-}
-
-a:hover {
-  background-color: var(--color-imbuia);
-}
+/* Estilos de link não globais: use classes como `underline`, `hover:underline` ou `btn-primary` quando necessário. */
